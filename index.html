@@ -2,22 +2,48 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZPlayer Splash</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ZabPlay: Hi-Fi Media</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+
     <div id="splash-screen">
         <div class="logo-wrapper">
-            <img src="logo.png" alt="ZPlayer Logo" class="app-logo">
+            <img src="logo.png" alt="ZabPlay Logo" class="splash-logo">
         </div>
     </div>
 
     <div id="main-content" style="display: none;">
-        <h1 style="color: #1de9b6; text-align: center; margin-top: 50px;">ZPlayer: Scanning Media...</h1>
-    </div>
 
+        <header class="app-header">
+            <div class="header-left">
+                <img src="logo.png" alt="ZabPlay Logo Small" class="header-logo">
+                <h1 class="app-title">Zab<span class="teal-text">Play</span></h1>
+            </div>
+            <button class="icon-btn search-btn">
+                <i class="fas fa-search"></i>
+            </button>
+        </header>
+
+        <section class="media-section history-section">
+            <h2 class="section-title">Continue Watching</h2>
+            <div class="horizontal-scroll" id="history-list">
+                </div>
+        </section>
+
+        <section class="media-section shorts-section">
+            <h2 class="section-title">Shorts</h2>
+            <div class="horizontal-scroll" id="shorts-list">
+                </div>
+        </section>
+
+        </div>
+
+    <script src="script.js"></script>
     <script>
+        // Splash Screen Transition connection
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
@@ -25,8 +51,13 @@
                 setTimeout(() => {
                     splash.style.display = 'none';
                     document.getElementById('main-content').style.display = 'block';
+                    
+                    // Initialize dynamic list population after main app loads
+                    if (typeof populateDynamicLists === "function") {
+                        populateDynamicLists();
+                    }
                 }, 600);
-            }, 2500); 
+            }, 2500); // 2.5s for splash glow
         });
     </script>
 </body>
