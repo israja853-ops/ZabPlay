@@ -3,33 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZPlayer Pure CSS Logo</title>
+    <title>ZPlayer Splash</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <div id="splash-screen">
         <div class="logo-wrapper">
-            <div class="z-logo-text">Z</div>
+            <img src="logo.png" alt="ZPlayer Logo" class="app-logo">
         </div>
     </div>
 
     <div id="main-content" style="display: none;">
-        <h1>App main content yahan banega</h1>
+        <h1 style="color: #1de9b6; text-align: center; margin-top: 50px;">ZPlayer: Scanning Media...</h1>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            function showMainApp() {
+        window.addEventListener('load', () => {
+            setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
-                const main = document.getElementById('main-content');
                 splash.classList.add('fade-out');
                 setTimeout(() => {
                     splash.style.display = 'none';
-                    main.style.display = 'block';
+                    document.getElementById('main-content').style.display = 'block';
                 }, 600);
-            }
-            setTimeout(showMainApp, 2500); 
+            }, 2500); 
         });
     </script>
 </body>
