@@ -1,0 +1,77 @@
+/* Purani styles hatane ke liye */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #0f0f0f; /* Logo jaisa dark background */
+    font-family: sans-serif;
+    overflow: hidden; /* Splash screen chalti rahe, toh scroll na ho */
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 👇 Splash screen container */
+#splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #111a1a; /* Logo background se matching background color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Taaki yeh sabke upar rahe */
+    transition: opacity 0.6s ease-out, visibility 0.6s ease-out; /* Fade-out animation ke liye */
+}
+
+/* Logo container taaki glow effects de sakein */
+.logo-container {
+    padding: 20px;
+    border-radius: 20px;
+    /* Ek halka glow effect, logo ke 'Z' se matching color */
+    box-shadow: 0 0 50px rgba(100, 220, 200, 0.4); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 👇 Logo image styling aur animation */
+.app-logo {
+    width: 150px; /* Logo ki initial width, bad mein animate hogi */
+    max-width: 80%; /* Phone par responsive rahe */
+    height: auto;
+    
+    /* 👇 Zoom aur rotate effect ki animation (see below) */
+    animation: splashZoomIn 1.8s ease-out forwards;
+}
+
+/* 👇 Logo ke glow effect wali animation */
+@keyframes splashZoomIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.6) rotate(-5deg); /* Thoda chhota aur teercha */
+        filter: blur(10px) brightness(0); /* Shuru mein blured */
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg); /* Normal size aur orientation */
+        filter: blur(0px) brightness(1); /* Sharp ho jaye */
+    }
+    100% {
+        transform: scale(1.05); /* Ending mein thoda zoom-out */
+        filter: blur(0px) brightness(1); 
+    }
+}
+
+/* 👇 Fade out state, JavaScript trigger karegi */
+#splash-screen.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
