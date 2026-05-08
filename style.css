@@ -1,80 +1,46 @@
-/* Basic reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-    background-color: #0f0f0f; /* Logo jaisa dark background */
-    font-family: sans-serif;
-    overflow: hidden;
+    background-color: #0d1111;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
+    font-family: sans-serif;
 }
 
-/* 👇 Splash screen container */
 #splash-screen {
     position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
-    background-color: #111a1a;
+    background-color: #0d1414;
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
+    transition: opacity 0.6s ease;
 }
 
-/* Logo container jiske andar glow effect hai */
 .logo-wrapper {
-    background-color: #0b1111; /* Box ka background color */
-    padding: 30px 50px; /* Text ke charo taraf spacing */
-    border-radius: 20px;
-    /* 👇 Glow effect */
-    box-shadow: 0 0 50px rgba(100, 220, 200, 0.4); 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid rgba(100, 220, 200, 0.1); /* Halka teal border */
+    background: #0a1111;
+    padding: 25px;
+    border-radius: 40px;
+    /* Stylish Glow */
+    box-shadow: 0 0 50px rgba(29, 233, 182, 0.3);
+    border: 1px solid rgba(29, 233, 182, 0.1);
 }
 
-/* 👇 Sirf text 'Z' ki styling logo banane ke liye */
-.z-logo-text {
-    font-size: 80px; /* Font size bada karein */
-    font-weight: bold; /* Bold text */
-    /* 👇 Teal gradient color */
-    background: linear-gradient(135deg, #1de9b6, #00897b);
-    -webkit-background-clip: text; /* Text ke andar gradient dikhane ke liye */
-    -webkit-text-fill-color: transparent; /* Text ka apna color transparent */
-    text-shadow: 0 0 20px rgba(100, 220, 200, 0.6); /* Text par glow */
-    animation: splashZoomIn 1.8s ease-out forwards; /* Wahi zoom-in animation */
+.app-logo {
+    width: 180px; 
+    height: auto;
+    /* Zooming animation */
+    animation: zoomEffect 2s ease-out forwards;
 }
 
-/* 👇 Logo animation */
-@keyframes splashZoomIn {
-    0% {
-        opacity: 0;
-        transform: scale(0.6);
-        filter: blur(10px);
-    }
-    50% {
-        opacity: 1;
-        transform: scale(1);
-        filter: blur(0px);
-    }
-    100% {
-        transform: scale(1.05);
-        filter: blur(0px);
-    }
+@keyframes zoomEffect {
+    0% { transform: scale(0.7); opacity: 0; filter: blur(5px); }
+    100% { transform: scale(1); opacity: 1; filter: blur(0px); }
 }
 
-/* 👇 Fade out state */
-#splash-screen.fade-out {
-    opacity: 0;
-    visibility: hidden;
-}
+.fade-out { opacity: 0; visibility: hidden; }
