@@ -10,25 +10,27 @@
 
     <div id="splash-screen">
         <div class="logo-wrapper">
-            <div class="z-logo">
-                <div class="z-shape">Z</div>
-                <div class="play-button"></div>
-            </div>
+            <div class="z-logo-text">Z</div>
         </div>
     </div>
 
     <div id="main-content" style="display: none;">
-        <h1>Welcome to ZPlayer</h1>
+        <h1>App main content yahan banega</h1>
     </div>
 
     <script>
-        setTimeout(() => {
-            document.getElementById('splash-screen').classList.add('fade-out');
-            setTimeout(() => {
-                document.getElementById('splash-screen').style.display = 'none';
-                document.getElementById('main-content').style.display = 'block';
-            }, 600);
-        }, 3000);
+        document.addEventListener('DOMContentLoaded', () => {
+            function showMainApp() {
+                const splash = document.getElementById('splash-screen');
+                const main = document.getElementById('main-content');
+                splash.classList.add('fade-out');
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                    main.style.display = 'block';
+                }, 600);
+            }
+            setTimeout(showMainApp, 2500); 
+        });
     </script>
 </body>
 </html>
