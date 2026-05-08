@@ -1,82 +1,80 @@
-body {
+/* Basic reset */
+* {
     margin: 0;
-    background: #0f0f0f;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #0f0f0f; /* Logo jaisa dark background */
+    font-family: sans-serif;
+    overflow: hidden;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
 }
 
+/* 👇 Splash screen container */
 #splash-screen {
     position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    background: #111a1a;
+    background-color: #111a1a;
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    transition: 0.6s;
+    transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
 }
 
-/* Logo ka main Box */
-.z-logo {
-    width: 180px;
-    height: 180px;
-    background: linear-gradient(145deg, #162a2a, #0a1414);
-    border-radius: 40px;
+/* Logo container jiske andar glow effect hai */
+.logo-wrapper {
+    background-color: #0b1111; /* Box ka background color */
+    padding: 30px 50px; /* Text ke charo taraf spacing */
+    border-radius: 20px;
+    /* 👇 Glow effect */
+    box-shadow: 0 0 50px rgba(100, 220, 200, 0.4); 
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 2px 5px rgba(255,255,255,0.1);
-    animation: zoomIn 1.5s ease-out;
+    border: 1px solid rgba(100, 220, 200, 0.1); /* Halka teal border */
 }
 
-/* 'Z' character design */
-.z-shape {
-    font-family: 'Arial Black', sans-serif;
-    font-size: 110px;
-    font-weight: 900;
-    color: #1de9b6;
-    background: linear-gradient(to bottom, #1de9b6, #00897b);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5));
-    margin-right: 15px;
+/* 👇 Sirf text 'Z' ki styling logo banane ke liye */
+.z-logo-text {
+    font-size: 80px; /* Font size bada karein */
+    font-weight: bold; /* Bold text */
+    /* 👇 Teal gradient color */
+    background: linear-gradient(135deg, #1de9b6, #00897b);
+    -webkit-background-clip: text; /* Text ke andar gradient dikhane ke liye */
+    -webkit-text-fill-color: transparent; /* Text ka apna color transparent */
+    text-shadow: 0 0 20px rgba(100, 220, 200, 0.6); /* Text par glow */
+    animation: splashZoomIn 1.8s ease-out forwards; /* Wahi zoom-in animation */
 }
 
-/* Play button (Triangle) shape */
-.play-button {
-    width: 0;
-    height: 0;
-    border-top: 30px solid transparent;
-    border-bottom: 30px solid transparent;
-    border-left: 50px solid #1de9b6;
-    filter: drop-shadow(4px 4px 10px rgba(0,0,0,0.4));
-    border-radius: 5px;
+/* 👇 Logo animation */
+@keyframes splashZoomIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.6);
+        filter: blur(10px);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0px);
+    }
+    100% {
+        transform: scale(1.05);
+        filter: blur(0px);
+    }
 }
 
-/* Bottom waves design like the logo */
-.z-logo::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 40px;
-    background: rgba(29, 233, 182, 0.1);
-    border-radius: 0 0 40px 40px;
-    clip-path: ellipse(70% 50% at 50% 100%);
-}
-
-/* Animation */
-@keyframes zoomIn {
-    0% { transform: scale(0.5); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
-}
-
-.fade-out {
+/* 👇 Fade out state */
+#splash-screen.fade-out {
     opacity: 0;
     visibility: hidden;
 }
-
