@@ -8,22 +8,39 @@
     <style>
         /* Modern Teal UI */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background-color: #000; font-family: sans-serif; color: #fff; }
+        body { background-color: #000; font-family: sans-serif; color: #fff; overflow-x: hidden; }
         
         .app-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #000; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(29, 233, 182, 0.2); }
         .teal-text { color: #1de9b6; }
         
-        /* Video Grid 2-Column */
+        /* Video Grid */
         .video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 15px 15px 100px; }
         .video-card { background: #0a0a0a; border-radius: 12px; overflow: hidden; border: 1px solid #1a1a1a; cursor: pointer; }
         .thumb-box { width: 100%; aspect-ratio: 16/9; background: #111; display: flex; align-items: center; justify-content: center; position: relative; }
         .info { padding: 10px; }
-        .name { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #eee; }
+        .name { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #eee; }
 
-        /* Real Video Player Modal */
-        #player-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; }
-        video { width: 100%; height: 100%; }
-        .close-player { position: absolute; top: 20px; left: 20px; font-size: 25px; color: #1de9b6; z-index: 2100; background: rgba(0,0,0,0.5); border-radius: 50%; padding: 5px 12px; border: none; }
+        /* 👇 FIXED PLAYER LAYOUT (As per your video) 👇 */
+        #player-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; flex-direction: column; }
+        
+        .video-container { width: 100%; position: sticky; top: 0; background: #000; z-index: 2100; }
+        video { width: 100%; aspect-ratio: 16/9; display: block; }
+
+        /* Custom Controls */
+        .custom-controls { padding: 10px; background: rgba(0,0,0,0.8); display: flex; flex-direction: column; gap: 10px; }
+        .progress-area { width: 100%; height: 4px; background: #333; border-radius: 2px; position: relative; cursor: pointer; }
+        .progress-bar { height: 100%; background: #1de9b6; width: 0%; border-radius: 2px; }
+        
+        .buttons { display: flex; justify-content: center; align-items: center; gap: 30px; font-size: 24px; padding: 5px 0; }
+        .control-btn { color: #fff; cursor: pointer; transition: 0.2s; }
+        .control-btn:active { color: #1de9b6; }
+
+        /* Scrollable List under Video */
+        .up-next-list { flex: 1; overflow-y: auto; padding: 15px; background: #000; }
+        .next-video-item { display: flex; gap: 12px; margin-bottom: 15px; align-items: center; }
+        .next-thumb { width: 120px; height: 70px; background: #111; border-radius: 8px; flex-shrink: 0; }
+        
+        .close-player { position: absolute; top: 10px; right: 15px; font-size: 22px; color: #fff; z-index: 2200; border: none; background: none; }
 
         /* Floating Add Button */
         #add-videos-btn { position: fixed; bottom: 85px; right: 20px; background: #1de9b6; color: #000; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; border: none; box-shadow: 0 4px 15px rgba(29,233,182,0.4); z-index: 1500; }
@@ -44,12 +61,30 @@
     <input type="file" id="file-input" multiple accept="video/*" style="display: none;">
     <button id="add-videos-btn"><i class="fas fa-plus"></i></button>
 
-    <div class="video-grid" id="video-grid">
-        </div>
+    <div class="video-grid" id="video-grid"></div>
 
     <div id="player-overlay">
-        <button class="close-player" onclick="closePlayer()"><i class="fas fa-times"></i></button>
-        <video id="main-video" controls autoplay></video>
+        <button class="close-player" onclick="closePlayer()"><i class="fas fa-chevron-down"></i></button>
+        
+        <div class="video-container">
+            <video id="main-video" autoplay></video>
+            
+            <div class="custom-controls">
+                <div class="progress-area" onclick="seek(event)">
+                    <div class="progress-bar" id="p-bar"></div>
+                </div>
+                <div class="buttons">
+                    <i class="fas fa-step-backward control-btn" onclick="prevVideo()"></i>
+                    <i class="fas fa-pause control-btn" id="play-pause-btn" onclick="togglePlay()"></i>
+                    <i class="fas fa-step-forward control-btn" onclick="nextVideo()"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="up-next-list">
+            <p style="font-size: 14px; margin-bottom: 15px; color: #888;">UP NEXT</p>
+            <div id="queue-list"></div>
+        </div>
     </div>
 
     <nav class="bottom-nav">
@@ -64,41 +99,81 @@
         const grid = document.getElementById('video-grid');
         const playerOverlay = document.getElementById('player-overlay');
         const videoPlayer = document.getElementById('main-video');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const progressBar = document.getElementById('p-bar');
+        
+        let videoList = [];
+        let currentIndex = 0;
 
-        // Open Gallery to Select Videos
         addBtn.onclick = () => fileInput.click();
 
         fileInput.onchange = (e) => {
             const files = Array.from(e.target.files);
-            
-            files.forEach(file => {
+            files.forEach((file, index) => {
                 const url = URL.createObjectURL(file);
+                videoList.push({ name: file.name, url: url });
+                
                 const card = document.createElement('div');
                 card.className = 'video-card';
-                card.onclick = () => playVideo(url);
-                
+                card.onclick = () => playVideo(videoList.length - 1);
                 card.innerHTML = `
-                    <div class="thumb-box">
-                        <i class="fas fa-play teal-text" style="opacity: 0.7;"></i>
-                    </div>
-                    <div class="info">
-                        <p class="name">${file.name}</p>
-                    </div>
+                    <div class="thumb-box"><i class="fas fa-play teal-text"></i></div>
+                    <div class="info"><p class="name">${file.name}</p></div>
                 `;
                 grid.appendChild(card);
             });
         };
 
-        function playVideo(url) {
-            videoPlayer.src = url;
-            playerOverlay.style.display = 'block';
+        function playVideo(index) {
+            currentIndex = index;
+            videoPlayer.src = videoList[currentIndex].url;
+            playerOverlay.style.display = 'flex';
+            updateQueue();
+        }
+
+        function togglePlay() {
+            if (videoPlayer.paused) {
+                videoPlayer.play();
+                playPauseBtn.className = 'fas fa-pause control-btn';
+            } else {
+                videoPlayer.pause();
+                playPauseBtn.className = 'fas fa-play control-btn';
+            }
+        }
+
+        videoPlayer.ontimeupdate = () => {
+            const pct = (videoPlayer.currentTime / videoPlayer.duration) * 100;
+            progressBar.style.width = pct + '%';
+        };
+
+        function nextVideo() {
+            if (currentIndex < videoList.length - 1) playVideo(currentIndex + 1);
+        }
+
+        function prevVideo() {
+            if (currentIndex > 0) playVideo(currentIndex - 1);
         }
 
         function closePlayer() {
             videoPlayer.pause();
             playerOverlay.style.display = 'none';
         }
+
+        function updateQueue() {
+            const qList = document.getElementById('queue-list');
+            qList.innerHTML = '';
+            videoList.forEach((v, i) => {
+                if(i === currentIndex) return;
+                const item = document.createElement('div');
+                item.className = 'next-video-item';
+                item.onclick = () => playVideo(i);
+                item.innerHTML = `
+                    <div class="next-thumb"></div>
+                    <p style="font-size:12px;">${v.name}</p>
+                `;
+                qList.appendChild(item);
+            });
+        }
     </script>
 </body>
 </html>
-
