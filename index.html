@@ -1,64 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ZabPlay: Hi-Fi Media</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body>
+<div id="main-content" style="display: none;">
+    <header class="app-header">
+        <div class="app-title"><img src="logo.png"> Zab<span class="teal-text">Play</span></div>
+        <button class="search-btn"><i class="fas fa-search"></i></button>
+    </header>
 
-    <div id="splash-screen">
-        <div class="logo-wrapper">
-            <img src="logo.png" alt="ZabPlay Logo" class="splash-logo">
-        </div>
-    </div>
+    <h2 class="section-title">Continue Watching</h2>
+    <div class="scroll-container" id="history-list"></div>
 
-    <div id="main-content" style="display: none;">
+    <h2 class="section-title">Videos</h2>
+    <div class="video-grid" id="main-video-grid"></div>
 
-        <header class="app-header">
-            <div class="header-left">
-                <img src="logo.png" alt="ZabPlay Logo Small" class="header-logo">
-                <h1 class="app-title">Zab<span class="teal-text">Play</span></h1>
-            </div>
-            <button class="icon-btn search-btn">
-                <i class="fas fa-search"></i>
-            </button>
-        </header>
-
-        <section class="media-section history-section">
-            <h2 class="section-title">Continue Watching</h2>
-            <div class="horizontal-scroll" id="history-list">
-                </div>
-        </section>
-
-        <section class="media-section shorts-section">
-            <h2 class="section-title">Shorts</h2>
-            <div class="horizontal-scroll" id="shorts-list">
-                </div>
-        </section>
-
-        </div>
-
-    <script src="script.js"></script>
-    <script>
-        // Splash Screen Transition connection
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const splash = document.getElementById('splash-screen');
-                splash.classList.add('fade-out');
-                setTimeout(() => {
-                    splash.style.display = 'none';
-                    document.getElementById('main-content').style.display = 'block';
-                    
-                    // Initialize dynamic list population after main app loads
-                    if (typeof populateDynamicLists === "function") {
-                        populateDynamicLists();
-                    }
-                }, 600);
-            }, 2500); // 2.5s for splash glow
-        });
-    </script>
-</body>
-</html>
+    <nav class="bottom-nav">
+        <div class="nav-item active"><i class="fas fa-video"></i><span>Video</span></div>
+        <div class="nav-item"><i class="fas fa-music"></i><span>Music</span></div>
+        <div class="nav-item"><i class="fas fa-folder"></i><span>Files</span></div>
+    </nav>
+</div>
