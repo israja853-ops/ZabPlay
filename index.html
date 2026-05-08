@@ -1,18 +1,79 @@
-<div id="main-content" style="display: none;">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZabPlay: Media Player</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* CSS yahan hai (White screen nahi aayegi) */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #000; font-family: sans-serif; color: #fff; overflow-x: hidden; }
+        
+        .app-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #000; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(29, 233, 182, 0.1); }
+        .app-title { font-size: 20px; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+        .app-title img { width: 28px; }
+        .teal-text { color: #1de9b6; }
+        .search-btn { color: #1de9b6; font-size: 20px; background: none; border: none; }
+
+        .section-title { padding: 15px; font-size: 15px; font-weight: 600; }
+        
+        /* 2-Column Grid Fix */
+        .video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 15px 100px; }
+        .video-card { background: #0a0a0a; border-radius: 10px; overflow: hidden; border: 1px solid #1a1a1a; }
+        .thumb-box { width: 100%; aspect-ratio: 16/9; background: #111; display: flex; align-items: center; justify-content: center; position: relative; }
+        .duration { position: absolute; bottom: 5px; right: 5px; background: rgba(0,0,0,0.8); font-size: 10px; padding: 2px 5px; border-radius: 3px; }
+        .info { padding: 8px; }
+        .name { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .size { font-size: 10px; color: #888; margin-top: 2px; }
+
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #050505; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #1a1a1a; }
+        .nav-item { color: #888; font-size: 20px; display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; }
+        .nav-item.active { color: #1de9b6; }
+        .nav-item span { font-size: 10px; }
+    </style>
+</head>
+<body>
+
     <header class="app-header">
         <div class="app-title"><img src="logo.png"> Zab<span class="teal-text">Play</span></div>
         <button class="search-btn"><i class="fas fa-search"></i></button>
     </header>
 
-    <h2 class="section-title">Continue Watching</h2>
-    <div class="scroll-container" id="history-list"></div>
-
     <h2 class="section-title">Videos</h2>
-    <div class="video-grid" id="main-video-grid"></div>
+    <div class="video-grid" id="video-grid">
+        </div>
 
     <nav class="bottom-nav">
-        <div class="nav-item active"><i class="fas fa-video"></i><span>Video</span></div>
-        <div class="nav-item"><i class="fas fa-music"></i><span>Music</span></div>
-        <div class="nav-item"><i class="fas fa-folder"></i><span>Files</span></div>
+        <a href="#" class="nav-item active"><i class="fas fa-video"></i><span>Video</span></a>
+        <a href="#" class="nav-item"><i class="fas fa-music"></i><span>Music</span></a>
+        <a href="#" class="nav-item"><i class="fas fa-folder"></i><span>Files</span></a>
     </nav>
-</div>
+
+    <script>
+        // JS bhi isi file mein hai
+        const videos = [
+            { name: "VID_20240508_101.mp4", time: "04:25", size: "12.5 MB" },
+            { name: "WhatsApp Video 2024.mp4", time: "01:12", size: "3.2 MB" },
+            { name: "Instagram_Reel_99.mp4", time: "00:30", size: "5.8 MB" },
+            { name: "Movie_Clip_Final.mkv", time: "12:45", size: "145 MB" },
+            { name: "New_Project_2026.mp4", time: "02:10", size: "22 MB" },
+            { name: "Camera_Record.mp4", time: "00:15", size: "1.5 MB" }
+        ];
+
+        const grid = document.getElementById('video-grid');
+        grid.innerHTML = videos.map(v => `
+            <div class="video-card">
+                <div class="thumb-box">
+                    <i class="fas fa-play-circle" style="font-size:30px; color:#333;"></i>
+                    <span class="duration">${v.time}</span>
+                </div>
+                <div class="info">
+                    <p class="name">${v.name}</p>
+                    <p class="size">${v.size}</p>
+                </div>
+            </div>
+        `).join('');
+    </script>
+</body>
+</html>
