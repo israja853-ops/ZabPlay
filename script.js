@@ -111,3 +111,35 @@ function playFull(url) {
     alert("Video Player loading...");
 }
 
+const playerOverlay = document.getElementById('player-overlay');
+const videoEngine = document.getElementById('main-video-engine');
+
+function playFull(url) {
+    videoEngine.src = url;
+    playerOverlay.style.display = 'flex';
+    videoEngine.play();
+    updatePlayerUI();
+}
+
+function togglePlay() {
+    if(videoEngine.paused) videoEngine.play();
+    else videoEngine.pause();
+    document.getElementById('master-play').className = videoEngine.paused ? 'fas fa-play-circle' : 'fas fa-pause-circle';
+}
+
+videoEngine.ontimeupdate = () => {
+    const p = (videoEngine.currentTime / videoEngine.duration) * 100;
+    document.getElementById('seek-fill').style.width = p + '%';
+    document.getElementById('curr-time').innerText = formatTime(videoEngine.currentTime);
+};
+
+function closePlayer() {
+    videoEngine.pause();
+    playerOverlay.style.display = 'none';
+}
+
+// Volume & Brightness Gesture Logic (Simplified)
+videoEngine.onclick = () => {
+    const ui = document.getElementById('player-ui');
+    ui.style.opacity = ui.style.opacity == '0' ? '1' : '0';
+};
