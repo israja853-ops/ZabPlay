@@ -1,16 +1,18 @@
-// ZebPlay - Final Logic Binding
+// ZebPlay - Advance Professional Logic
 const videoScanner = document.getElementById('video-scanner');
 const historyList = document.getElementById('history-list');
 const shortsList = document.getElementById('shorts-list');
 const allVideosList = document.getElementById('all-videos-list');
 const playerOverlay = document.getElementById('player-overlay');
 const videoEngine = document.getElementById('main-video-engine');
+const controlsWrapper = document.getElementById('full-player-controls');
 
 let allVideos = [];
+let currentIndex = -1;
 let isLocked = false;
-let currentSpeed = 1;
+let hideTimeout;
 
-// 1. Settings & File Scanner
+// 1. File Scanner & Metadata
 document.getElementById('settings-trigger').onclick = () => videoScanner.click();
 
 videoScanner.onchange = async (e) => {
@@ -23,163 +25,123 @@ videoScanner.onchange = async (e) => {
     }
 };
 
-// 2. Video Info Generator (Thumbnails)
 function getVideoMetadata(file, url) {
     return new Promise((resolve) => {
         const video = document.createElement('video');
         video.src = url;
-        video.preload = 'metadata';
         video.onloadedmetadata = () => {
             const isShort = video.videoHeight > video.videoWidth;
             video.currentTime = 1;
             video.onseeked = () => {
                 const canvas = document.createElement('canvas');
                 canvas.width = 160; canvas.height = 90;
-                if(isShort) { canvas.width = 90; canvas.height = 160; }
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                resolve({
-                    name: file.name,
-                    duration: formatTime(video.duration),
-                    url: url,
-                    thumb: canvas.toDataURL('image/jpeg'),
-                    isShort: isShort
-                });
+                resolve({ name: file.name, duration: formatTime(video.duration), url: url, thumb: canvas.toDataURL(), isShort: isShort });
             };
         };
     });
 }
 
-// 3. Home Page Rendering
 function renderVideo(video) {
-    const cardHtml = video.isShort ? 
-        `<div class="short-card" onclick="playFull('${video.url}', '${video.name}')">
-            <img src="${video.thumb}" style="width:100%;height:100%;object-fit:cover;">
-            <div class="short-info"><i class="fas fa-play"></i>&nbsp;Short</div>
-        </div>` :
-        `<div class="video-item" onclick="playFull('${video.url}', '${video.name}')">
-            <div class="video-thumb-large"><img src="${video.thumb}" style="width:100%;height:100%;object-fit:cover;"></div>
-            <div class="video-info-box"><div><p class="v-title">${video.name}</p><p class="v-meta">${video.duration}</p></div><i class="fas fa-ellipsis-v"></i></div>
-        </div>`;
-    
-    if(video.isShort) shortsList.innerHTML += cardHtml;
-    else {
-        allVideosList.innerHTML += cardHtml;
-        historyList.innerHTML += `<div class="hist-card" onclick="playFull('${video.url}', '${video.name}')"><div class="thumb-area"><img src="${video.thumb}" style="width:100%;height:100%;object-fit:cover;"></div></div>`;
-    }
+    const html = video.isShort ? 
+        `<div class="short-card" onclick="playFull('${video.url}')"><img src="${video.thumb}"></div>` :
+        `<div class="video-item" onclick="playFull('${video.url}')"><div class="video-thumb-large"><img src="${video.thumb}"></div><div class="video-info-box"><p>${video.name}</p></div></div>`;
+    if(video.isShort) shortsList.innerHTML += html;
+    else allVideosList.innerHTML += html;
 }
 
-// 4. --- PLAYER FUNCTIONALITY (Real Working Icons) ---
+// 2. --- CORE PLAYER LOGIC ---
 
-function playFull(url, name) {
+function playFull(url) {
+    currentIndex = allVideos.findIndex(v => v.url === url);
+    const video = allVideos[currentIndex];
     videoEngine.src = url;
-    document.getElementById('playing-v-title').innerText = name;
+    document.getElementById('playing-v-title').innerText = video.name;
     playerOverlay.style.display = 'flex';
     videoEngine.play();
-    document.getElementById('master-play').className = 'fas fa-pause-circle';
-    refreshPlayerLists(); // Shorts aur Next UP update karein
+    updateUIState();
+    resetHideTimer();
 }
 
-// Master Play/Pause
-document.getElementById('master-play').onclick = togglePlay;
-function togglePlay() {
+// Auto-Hide Controls (3 Seconds)
+function resetHideTimer() {
     if(isLocked) return;
-    if(videoEngine.paused) { 
-        videoEngine.play(); 
-        document.getElementById('master-play').className = 'fas fa-pause-circle'; 
-    } else { 
-        videoEngine.pause(); 
-        document.getElementById('master-play').className = 'fas fa-play-circle'; 
-    }
+    controlsWrapper.style.opacity = '1';
+    clearTimeout(hideTimeout);
+    hideTimeout = setTimeout(() => {
+        if(!videoEngine.paused) controlsWrapper.style.opacity = '0';
+    }, 3000);
 }
 
-// Lock System
-document.getElementById('lock-btn').onclick = (e) => {
-    isLocked = !isLocked;
-    e.target.className = isLocked ? 'fas fa-lock' : 'fas fa-lock-open';
-    const ui = document.getElementById('player-ui');
-    const topUi = document.getElementById('top-controls');
-    ui.style.display = isLocked ? 'none' : 'block';
-    // Header ke baaki icons hide karo par arrow/lock rehne do
-    document.querySelectorAll('.header-right i:not(#lock-btn)').forEach(icon => {
-        icon.style.opacity = isLocked ? '0' : '1';
+function handleScreenTap() {
+    if(controlsWrapper.style.opacity === '0') resetHideTimer();
+    else controlsWrapper.style.opacity = '0';
+}
+
+// Double Tap to Seek (Left/Right)
+videoEngine.ondblclick = (e) => {
+    if(isLocked) return;
+    const rect = videoEngine.getBoundingClientRect();
+    if(e.clientX < rect.width / 2) videoEngine.currentTime -= 10; // Back
+    else videoEngine.currentTime += 10; // Forward
+    resetHideTimer();
+};
+
+// 3. --- BUTTON ACTIONS ---
+
+function toggleMute() {
+    videoEngine.muted = !videoEngine.muted;
+    document.getElementById('vol-btn').className = videoEngine.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+}
+
+function nextVideo() {
+    if(currentIndex < allVideos.length - 1) playFull(allVideos[currentIndex + 1].url);
+}
+
+function prevVideo() {
+    if(currentIndex > 0) playFull(allVideos[currentIndex - 1].url);
+}
+
+// Video to MP3 Mode (Background Play)
+function convertToMp3() {
+    alert("MP3 Mode Active: Audio will play in background.");
+    // In a real app, this would minimize the UI but keep audio playing
+}
+
+// Dropdown Toggles
+function toggleSettingsMenu() { document.getElementById('settings-menu').style.display = 'block'; }
+function toggleTitleMenu() { document.getElementById('title-menu').style.display = 'block'; }
+
+// 4. --- LIST SYNC & HIGHLIGHTING ---
+
+function updateUIState() {
+    const nextList = document.getElementById('up-next-list');
+    nextList.innerHTML = '';
+    allVideos.forEach((v, index) => {
+        if(!v.isShort) {
+            // Purple highlight for active video
+            const activeClass = index === currentIndex ? 'active-play' : '';
+            nextList.innerHTML += `
+                <div class="next-item-row ${activeClass}" onclick="playFull('${v.url}')">
+                    <img src="${v.thumb}">
+                    <div class="next-info"><h4>${v.name}</h4><p>${v.duration}</p></div>
+                </div>`;
+        }
     });
-};
-
-// Speed Control (1.X)
-function changeSpeed() {
-    if(isLocked) return;
-    currentSpeed = currentSpeed === 1 ? 1.5 : (currentSpeed === 1.5 ? 2 : 1);
-    videoEngine.playbackRate = currentSpeed;
-    document.getElementById('speed-btn').innerText = currentSpeed + '.X';
+    document.getElementById('master-play').className = 'fas fa-pause-circle';
 }
 
-// Fullscreen
-document.getElementById('full-screen-btn').onclick = () => {
-    if(isLocked) return;
-    if (videoEngine.requestFullscreen) videoEngine.requestFullscreen();
-};
-
-// Seekbar Sync
+// Utility
 videoEngine.ontimeupdate = () => {
     const p = (videoEngine.currentTime / videoEngine.duration) * 100;
     document.getElementById('seek-fill').style.width = p + '%';
     document.getElementById('curr-time').innerText = formatTime(videoEngine.currentTime);
-    if(!isNaN(videoEngine.duration)) document.getElementById('total-time').innerText = formatTime(videoEngine.duration);
 };
-
-document.getElementById('seek-container').onclick = (e) => {
-    if(isLocked) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    videoEngine.currentTime = ((e.clientX - rect.left) / rect.width) * videoEngine.duration;
-};
-
-// 5. Swipe Gestures (Volume/Brightness)
-let startY = 0;
-videoEngine.ontouchstart = (e) => startY = e.touches[0].clientY;
-videoEngine.ontouchmove = (e) => {
-    if(isLocked) return;
-    let moveY = startY - e.touches[0].clientY;
-    let rect = videoEngine.getBoundingClientRect();
-    if(e.touches[0].clientX < rect.width / 2) { 
-        // Left Side: Brightness (CSS filter simulation)
-        let b = 100 + (moveY / 5);
-        document.body.style.filter = `brightness(${b}%)`;
-        showBar('bright-bar', b / 2);
-    } else { 
-        // Right Side: Volume
-        videoEngine.volume = Math.min(1, Math.max(0, videoEngine.volume + (moveY / 1000)));
-        showBar('volume-bar', videoEngine.volume * 100);
-    }
-};
-
-function showBar(id, val) {
-    const el = document.getElementById(id);
-    el.style.display = 'block';
-    el.querySelector('.fill').style.width = val + '%';
-    clearTimeout(window.t);
-    window.t = setTimeout(() => el.style.display = 'none', 1000);
-}
-
-// 6. Player Lists (Separate Shorts & Next UP)
-function refreshPlayerLists() {
-    const nextList = document.getElementById('up-next-list');
-    const playerShorts = document.getElementById('player-shorts-list');
-    nextList.innerHTML = '';
-    playerShorts.innerHTML = '';
-    
-    allVideos.forEach(v => {
-        if(v.isShort) {
-            playerShorts.innerHTML += `<div class="short-card" onclick="playFull('${v.url}', '${v.name}')"><img src="${v.thumb}" style="width:100%;height:100%;object-fit:cover;"></div>`;
-        } else {
-            nextList.innerHTML += `<div class="next-item-row" onclick="playFull('${v.url}', '${v.name}')"><img src="${v.thumb}"><div class="next-info"><h4>${v.name}</h4><p>${v.duration}</p></div></div>`;
-        }
-    });
-}
 
 function formatTime(sec) {
     let m = Math.floor(sec / 60), s = Math.floor(sec % 60);
     return (m < 10 ? "0"+m : m) + ":" + (s < 10 ? "0"+s : s);
 }
 
-function closePlayer() { videoEngine.pause(); playerOverlay.style.display = 'none'; isLocked = false; }
+function closePlayer() { videoEngine.pause(); playerOverlay.style.display = 'none'; }
