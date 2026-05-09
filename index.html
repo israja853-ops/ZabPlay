@@ -24,24 +24,21 @@
                 <h2>History</h2>
                 <span class="more-btn">More</span>
             </div>
-            <div class="horizontal-scroll" id="history-list">
-                </div>
+            <div class="horizontal-scroll" id="history-list"></div>
         </section>
 
         <section class="section-container">
             <div class="section-header">
                 <h2>Shorts</h2>
             </div>
-            <div class="horizontal-scroll" id="shorts-list">
-                </div>
+            <div class="horizontal-scroll" id="shorts-list"></div>
         </section>
 
         <section class="section-container">
             <div class="section-header">
                 <h2>All Video</h2>
             </div>
-            <div class="vertical-list" id="all-videos-list">
-                </div>
+            <div class="vertical-list" id="all-videos-list"></div>
         </section>
     </main>
 
@@ -66,54 +63,68 @@
 
     <input type="file" id="video-scanner" multiple accept="video/*" style="display: none;">
 
-    <script src="script.js"></script>
     <div id="player-overlay">
-    <div class="player-header">
-        <i class="fas fa-arrow-left" onclick="closePlayer()"></i>
-        <div class="header-right">
-            <i class="fas fa-lock" id="lock-btn"></i>
-            <i class="fas fa-volume-up" id="vol-indicator"></i>
-            <i class="fas fa-sliders-h"></i>
-            <i class="fas fa-headphones"></i>
-            <i class="fas fa-cog"></i>
-        </div>
-    </div>
-
-    <div class="video-main-container">
-        <video id="main-video-engine" playsinline></video>
-        
-        <div id="gesture-overlay">
-            <div id="volume-bar" class="v-bar"><span>VOLUME</span><div class="fill"></div></div>
-            <div id="bright-bar" class="v-bar"><span>BRIGHTNESS</span><div class="fill"></div></div>
+        <div class="player-header">
+            <i class="fas fa-arrow-left" onclick="closePlayer()"></i>
+            <div class="header-right">
+                <i class="fas fa-lock-open" id="lock-btn"></i>
+                <i class="fas fa-volume-up" id="vol-indicator"></i>
+                <i class="fas fa-sliders-h"></i>
+                <i class="fas fa-headphones"></i>
+                <i class="fas fa-cog"></i>
+            </div>
         </div>
 
-        <div class="player-controls" id="player-ui">
-            <div class="mid-btns">
-                <i class="fas fa-step-backward" onclick="prevVid()"></i>
-                <i class="fas fa-play-circle" id="master-play" onclick="togglePlay()"></i>
-                <i class="fas fa-step-forward" onclick="nextVid()"></i>
+        <div class="video-main-container">
+            <video id="main-video-engine" playsinline></video>
+            
+            <div id="gesture-overlay">
+                <div id="volume-bar" class="v-bar"><span>VOLUME</span><div class="fill"></div></div>
+                <div id="bright-bar" class="v-bar"><span>BRIGHTNESS</span><div class="fill"></div></div>
+            </div>
+
+            <div class="player-controls" id="player-ui">
+                <div class="mid-btns">
+                    <i class="fas fa-step-backward" onclick="prevVid()"></i>
+                    <i class="fas fa-play-circle" id="master-play" onclick="togglePlay()"></i>
+                    <i class="fas fa-step-forward" onclick="nextVid()"></i>
+                </div>
+                
+                <div class="bottom-controls">
+                    <div class="time-info">
+                        <span id="curr-time">00:00</span>
+                        <div class="seek-bar" onclick="manualSeek(event)">
+                            <div id="seek-fill"></div>
+                        </div>
+                        <span id="total-time">00:00</span>
+                    </div>
+                    <div class="extra-tools">
+                        <span id="speed-btn">1.X</span>
+                        <i class="fas fa-expand" onclick="toggleFullscreen()"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="player-details-area">
+            <div class="video-title-bar">
+                <h2 id="playing-v-title">Video - Title</h2>
+                <i class="fas fa-ellipsis-v"></i>
             </div>
             
-            <div class="bottom-controls">
-                <div class="time-info">
-                    <span id="curr-time">00:00</span>
-                    <div class="seek-bar" onclick="manualSeek(event)">
-                        <div id="seek-fill"></div>
-                    </div>
-                    <span id="total-time">00:00</span>
-                </div>
-                <div class="extra-tools">
-                    <span>1.X</span>
-                    <i class="fas fa-expand"></i>
-                </div>
+            <div class="player-section">
+                <h3>Short</h3>
+                <div class="horizontal-scroll" id="player-shorts-list"></div>
+            </div>
+
+            <div class="player-section">
+                <h3>Next.UP</h3>
+                <div id="up-next-list"></div>
             </div>
         </div>
     </div>
 
-    <div class="up-next-container">
-        <h3>Up Next</h3>
-        <div id="up-next-list"></div>
-    </div>
-</div>
+    <script src="script.js"></script>
 </body>
 </html>
+
