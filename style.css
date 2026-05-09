@@ -214,3 +214,78 @@ body {
     background: var(--accent-purple);
     box-shadow: 0 0 5px var(--accent-purple);
 }
+
+/* Full Player Screen Design */
+#player-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #000;
+    z-index: 5000;
+    flex-direction: column;
+}
+
+.player-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+    z-index: 10;
+}
+
+.video-main-container {
+    width: 100%;
+    aspect-ratio: 16/9;
+    position: relative;
+    background: #000;
+}
+
+#main-video-engine {
+    width: 100%;
+    height: 100%;
+}
+
+/* Seek Bar Style */
+.seek-bar {
+    flex: 1;
+    height: 4px;
+    background: rgba(255,255,255,0.2);
+    margin: 0 10px;
+    position: relative;
+    border-radius: 2px;
+}
+
+#seek-fill {
+    width: 0%;
+    height: 100%;
+    background: var(--accent-purple);
+    box-shadow: 0 0 8px var(--accent-purple);
+}
+
+/* Volume/Brightness Bars (As seen in your video) */
+.v-bar {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    background: rgba(0,0,0,0.7);
+    padding: 10px;
+    border-radius: 10px;
+    display: none;
+    text-align: center;
+}
+
+.v-bar .fill {
+    height: 5px;
+    background: var(--accent-gold);
+    margin-top: 5px;
+}
+
+/* Up Next Styling */
+.up-next-container {
+    flex: 1;
+    padding: 15px;
+    background: #0a0a0c;
+    overflow-y: auto;
+}
