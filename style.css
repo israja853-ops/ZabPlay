@@ -1,76 +1,216 @@
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
+/* ZebPlay Professional Theme */
 :root {
-    --bg-black: #000000;
-    --bg-card: #0a0a0a;
-    --teal-main: #1de9b6;
-    --text-white: #ffffff;
-    --text-muted: #888888;
+    --bg-color: #050507;
+    --card-bg: #121217;
+    --accent-purple: #a155ff;
+    --accent-gold: #d4af37;
+    --text-main: #ffffff;
+    --text-dim: #a0a0a0;
+    --nav-bg: #0a0a0c;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
-    background-color: var(--bg-black);
-    font-family: 'Segoe UI', Roboto, sans-serif;
-    color: var(--text-white);
+    background-color: var(--bg-color);
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-main);
+    overflow: hidden; /* Scroll sirf content area mein hoga */
 }
 
-/* Header with Search */
+/* Header Styling */
 .app-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px 20px;
-    background: #000;
+    background: var(--bg-color);
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 100;
 }
-.app-title { font-size: 20px; font-weight: bold; display: flex; align-items: center; gap: 8px; }
-.app-title img { width: 28px; }
-.teal-text { color: var(--teal-main); }
-.search-btn { color: var(--teal-main); font-size: 20px; background: none; border: none; }
 
-/* Sections Styling */
-.section-title { padding: 15px 15px 10px; font-size: 15px; font-weight: 600; color: var(--text-white); }
+.logo {
+    font-size: 22px;
+    font-weight: 600;
+}
 
-/* 👇 Horizontal Scroll for History & Shorts 👇 */
-.scroll-container {
+.logo span {
+    color: var(--accent-purple);
+}
+
+.header-icons i {
+    font-size: 18px;
+    margin-left: 20px;
+    color: var(--text-dim);
+    cursor: pointer;
+}
+
+/* Content Area */
+.content-scroll {
+    height: calc(100vh - 130px);
+    overflow-y: auto;
+    padding-bottom: 20px;
+}
+
+.section-container {
+    margin-top: 20px;
+    padding: 0 15px;
+}
+
+.section-header {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.section-header h2 {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.more-btn {
+    color: var(--accent-purple);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Horizontal Scroll (History & Shorts) */
+.horizontal-scroll {
+    display: flex;
+    gap: 12px;
     overflow-x: auto;
-    gap: 12px;
-    padding: 0 15px 15px;
-    scrollbar-width: none;
+    padding-bottom: 10px;
+    scrollbar-width: none; /* Hide scrollbar Firefox */
 }
-.scroll-container::-webkit-scrollbar { display: none; }
 
-.history-card { flex: 0 0 240px; background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid #1a1a1a; }
-.history-card .thumb { width: 100%; height: 130px; background: #111; object-fit: cover; }
-
-/* 👇 Main Video Grid (2 Columns) 👇 */
-.video-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Do video ek barabar mein */
-    gap: 12px;
-    padding: 0 15px 80px; /* Space for bottom nav */
+.horizontal-scroll::-webkit-scrollbar {
+    display: none; /* Hide scrollbar Chrome/Safari */
 }
-.video-card { background: var(--bg-card); border-radius: 10px; overflow: hidden; position: relative; }
-.video-card .thumb-box { width: 100%; aspect-ratio: 16/9; background: #111; position: relative; }
-.video-card .duration { position: absolute; bottom: 5px; right: 5px; background: rgba(0,0,0,0.8); font-size: 10px; padding: 2px 5px; border-radius: 3px; }
-.video-card .info { padding: 8px; }
-.video-card .name { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.video-card .size { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
 
-/* Bottom Navigation */
+/* History Card Design */
+.hist-card {
+    min-width: 160px;
+    background: var(--card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.thumb-area {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.play-icon-overlay {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    width: 24px;
+    height: 24px;
+    background: rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+}
+
+/* Shorts Card (Vertical) */
+.short-card {
+    min-width: 110px;
+    aspect-ratio: 9/16;
+    background: var(--card-bg);
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.short-info {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    display: flex;
+    align-items: center;
+    font-size: 10px;
+    color: #fff;
+    text-shadow: 0 1px 3px #000;
+}
+
+/* All Video (Vertical List) */
+.video-item {
+    margin-bottom: 15px;
+    background: var(--card-bg);
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.video-thumb-large {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    position: relative;
+}
+
+.video-info-box {
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.v-title { font-size: 14px; font-weight: 400; color: #fff; }
+.v-meta { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
+/* Bottom Nav */
 .bottom-nav {
     position: fixed;
     bottom: 0;
     width: 100%;
-    background: #050505;
+    height: 70px;
+    background: var(--nav-bg);
     display: flex;
     justify-content: space-around;
-    padding: 12px 0;
-    border-top: 1px solid #1a1a1a;
+    align-items: center;
+    border-top: 1px solid #1a1a1f;
+    padding-bottom: 10px;
 }
-.nav-item { color: var(--text-muted); font-size: 22px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.nav-item.active { color: var(--teal-main); }
-.nav-item span { font-size: 10px; }
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--text-dim);
+    font-size: 20px;
+    transition: 0.3s;
+}
+
+.nav-item span {
+    font-size: 10px;
+    margin-top: 5px;
+}
+
+.nav-item.active {
+    color: var(--accent-purple);
+}
+
+/* Progress bar inside cards */
+.progress-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: var(--accent-purple);
+    box-shadow: 0 0 5px var(--accent-purple);
+}
