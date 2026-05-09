@@ -64,20 +64,21 @@
     <input type="file" id="video-scanner" multiple accept="video/*" style="display: none;">
 
     <div id="player-overlay">
-        <div class="player-header">
-            <i class="fas fa-arrow-left" onclick="closePlayer()"></i>
-            <div class="header-right">
-                <i class="fas fa-lock-open" id="lock-btn"></i>
-                <i class="fas fa-volume-up" id="vol-indicator"></i>
-                <i class="fas fa-sliders-h"></i>
-                <i class="fas fa-headphones"></i>
-                <i class="fas fa-cog"></i>
-            </div>
-        </div>
-
-        <div class="video-main-container">
+        
+        <div class="video-main-container" id="video-box">
             <video id="main-video-engine" playsinline></video>
             
+            <div class="player-header" id="top-controls">
+                <i class="fas fa-arrow-left" onclick="closePlayer()"></i>
+                <div class="header-right">
+                    <i class="fas fa-lock-open" id="lock-btn"></i>
+                    <i class="fas fa-volume-up" id="vol-btn"></i>
+                    <i class="fas fa-sliders-h" id="eq-btn"></i>
+                    <i class="fas fa-headphones" id="audio-btn"></i>
+                    <i class="fas fa-cog" id="vid-settings"></i>
+                </div>
+            </div>
+
             <div id="gesture-overlay">
                 <div id="volume-bar" class="v-bar"><span>VOLUME</span><div class="fill"></div></div>
                 <div id="bright-bar" class="v-bar"><span>BRIGHTNESS</span><div class="fill"></div></div>
@@ -85,22 +86,22 @@
 
             <div class="player-controls" id="player-ui">
                 <div class="mid-btns">
-                    <i class="fas fa-step-backward" onclick="prevVid()"></i>
-                    <i class="fas fa-play-circle" id="master-play" onclick="togglePlay()"></i>
-                    <i class="fas fa-step-forward" onclick="nextVid()"></i>
+                    <i class="fas fa-step-backward" id="prev-btn"></i>
+                    <i class="fas fa-play-circle" id="master-play"></i>
+                    <i class="fas fa-step-forward" id="next-btn"></i>
                 </div>
                 
                 <div class="bottom-controls">
                     <div class="time-info">
                         <span id="curr-time">00:00</span>
-                        <div class="seek-bar" onclick="manualSeek(event)">
+                        <div class="seek-bar" id="seek-container">
                             <div id="seek-fill"></div>
                         </div>
                         <span id="total-time">00:00</span>
                     </div>
                     <div class="extra-tools">
-                        <span id="speed-btn">1.X</span>
-                        <i class="fas fa-expand" onclick="toggleFullscreen()"></i>
+                        <span id="speed-btn" onclick="changeSpeed()">1.X</span>
+                        <i class="fas fa-expand" id="full-screen-btn"></i>
                     </div>
                 </div>
             </div>
@@ -127,4 +128,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
