@@ -66,42 +66,50 @@
     <div id="player-overlay">
         
         <div class="video-main-container" id="video-box">
-            <video id="main-video-engine" playsinline></video>
+            <video id="main-video-engine" playsinline onclick="handleScreenTap()"></video>
             
-            <div class="player-header" id="top-controls">
-                <i class="fas fa-arrow-left" onclick="closePlayer()"></i>
-                <div class="header-right">
-                    <i class="fas fa-lock-open" id="lock-btn"></i>
-                    <i class="fas fa-volume-up" id="vol-btn"></i>
-                    <i class="fas fa-sliders-h" id="eq-btn"></i>
-                    <i class="fas fa-headphones" id="audio-btn"></i>
-                    <i class="fas fa-cog" id="vid-settings"></i>
-                </div>
-            </div>
-
-            <div id="gesture-overlay">
-                <div id="volume-bar" class="v-bar"><span>VOLUME</span><div class="fill"></div></div>
-                <div id="bright-bar" class="v-bar"><span>BRIGHTNESS</span><div class="fill"></div></div>
-            </div>
-
-            <div class="player-controls" id="player-ui">
-                <div class="mid-btns">
-                    <i class="fas fa-step-backward" id="prev-btn"></i>
-                    <i class="fas fa-play-circle" id="master-play"></i>
-                    <i class="fas fa-step-forward" id="next-btn"></i>
-                </div>
-                
-                <div class="bottom-controls">
-                    <div class="time-info">
-                        <span id="curr-time">00:00</span>
-                        <div class="seek-bar" id="seek-container">
-                            <div id="seek-fill"></div>
-                        </div>
-                        <span id="total-time">00:00</span>
+            <div class="player-ui-wrapper" id="full-player-controls">
+                <div class="player-header" id="top-controls">
+                    <i class="fas fa-arrow-left" onclick="closePlayer()"></i>
+                    <div class="header-right">
+                        <i class="fas fa-lock-open" id="lock-btn"></i>
+                        <i class="fas fa-volume-up" id="vol-btn" onclick="toggleMute()"></i>
+                        <i class="fas fa-sliders-h" id="eq-btn" onclick="openEqualizer()"></i>
+                        <i class="fas fa-headphones" id="audio-btn" onclick="convertToMp3()"></i>
+                        <i class="fas fa-cog" id="vid-settings" onclick="toggleSettingsMenu()"></i>
                     </div>
-                    <div class="extra-tools">
-                        <span id="speed-btn" onclick="changeSpeed()">1.X</span>
-                        <i class="fas fa-expand" id="full-screen-btn"></i>
+                    
+                    <div id="settings-menu" class="dropdown-panel">
+                        <div onclick="setRepeat()"><i class="fas fa-redo"></i> Repeat Mode</div>
+                        <div onclick="setQuality()"><i class="fas fa-high-definition"></i> Quality</div>
+                        <div onclick="shareApp()"><i class="fas fa-share-alt"></i> Share Me</div>
+                    </div>
+                </div>
+
+                <div id="gesture-overlay">
+                    <div id="volume-bar" class="v-bar"><span>VOLUME</span><div class="fill"></div></div>
+                    <div id="bright-bar" class="v-bar"><span>BRIGHTNESS</span><div class="fill"></div></div>
+                </div>
+
+                <div class="player-controls" id="player-ui">
+                    <div class="mid-btns">
+                        <i class="fas fa-step-backward" id="prev-btn" onclick="prevVideo()"></i>
+                        <i class="fas fa-play-circle" id="master-play"></i>
+                        <i class="fas fa-step-forward" id="next-btn" onclick="nextVideo()"></i>
+                    </div>
+                    
+                    <div class="bottom-controls">
+                        <div class="time-info">
+                            <span id="curr-time">00:00</span>
+                            <div class="seek-bar" id="seek-container">
+                                <div id="seek-fill"></div>
+                            </div>
+                            <span id="total-time">00:00</span>
+                        </div>
+                        <div class="extra-tools">
+                            <span id="speed-btn" onclick="changeSpeed()">1.X</span>
+                            <i class="fas fa-expand" id="full-screen-btn"></i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -110,7 +118,12 @@
         <div class="player-details-area">
             <div class="video-title-bar">
                 <h2 id="playing-v-title">Video - Title</h2>
-                <i class="fas fa-ellipsis-v"></i>
+                <i class="fas fa-ellipsis-v" onclick="toggleTitleMenu()"></i>
+                
+                <div id="title-menu" class="dropdown-panel">
+                    <div onclick="shareVideo()"><i class="fas fa-share"></i> Share</div>
+                    <div onclick="deleteVideo()" style="color: #ff4d4d;"><i class="fas fa-trash"></i> Delete</div>
+                </div>
             </div>
             
             <div class="player-section">
@@ -128,3 +141,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+
