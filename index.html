@@ -13,8 +13,8 @@
     <header class="app-header">
         <h1 class="logo">Zeb<span>Play</span></h1>
         <div class="header-icons">
-            <i class="fas fa-search" id="search-trigger"></i>
-            <i class="fas fa-cog" id="settings-trigger"></i>
+            <div class="icon-circle"><i class="fas fa-search" id="search-trigger"></i></div>
+            <div class="icon-circle purple-glow"><i class="fas fa-cog" id="settings-trigger"></i></div>
         </div>
     </header>
 
@@ -78,23 +78,14 @@
                         <i class="fas fa-headphones" id="audio-btn" onclick="convertToMp3()"></i>
                         <i class="fas fa-cog" id="vid-settings" onclick="toggleSettingsMenu()"></i>
                     </div>
-                    
-                    <div id="settings-menu" class="dropdown-panel">
-                        <div onclick="setRepeat()"><i class="fas fa-redo"></i> Repeat Mode</div>
-                        <div onclick="setQuality()"><i class="fas fa-high-definition"></i> Quality</div>
-                        <div onclick="shareApp()"><i class="fas fa-share-alt"></i> Share Me</div>
-                    </div>
-                </div>
-
-                <div id="gesture-overlay">
-                    <div id="volume-bar" class="v-bar"><span>VOLUME</span><div class="fill"></div></div>
-                    <div id="bright-bar" class="v-bar"><span>BRIGHTNESS</span><div class="fill"></div></div>
                 </div>
 
                 <div class="player-controls" id="player-ui">
                     <div class="mid-btns">
                         <i class="fas fa-step-backward" id="prev-btn" onclick="prevVideo()"></i>
-                        <i class="fas fa-play-circle" id="master-play"></i>
+                        <div class="play-circle-main">
+                            <i class="fas fa-play" id="master-play"></i>
+                        </div>
                         <i class="fas fa-step-forward" id="next-btn" onclick="nextVideo()"></i>
                     </div>
                     
@@ -102,12 +93,12 @@
                         <div class="time-info">
                             <span id="curr-time">00:00</span>
                             <div class="seek-bar" id="seek-container">
-                                <div id="seek-fill"></div>
+                                <div id="seek-fill"><div class="seek-handle"></div></div>
                             </div>
                             <span id="total-time">00:00</span>
                         </div>
                         <div class="extra-tools">
-                            <span id="speed-btn" onclick="changeSpeed()">1.X</span>
+                            <span id="speed-btn" onclick="changeSpeed()">1. X</span>
                             <i class="fas fa-expand" id="full-screen-btn"></i>
                         </div>
                     </div>
@@ -117,13 +108,8 @@
 
         <div class="player-details-area">
             <div class="video-title-bar">
-                <h2 id="playing-v-title">Video - Title</h2>
+                <h2 id="playing-v-title">Video - Titel</h2>
                 <i class="fas fa-ellipsis-v" onclick="toggleTitleMenu()"></i>
-                
-                <div id="title-menu" class="dropdown-panel">
-                    <div onclick="shareVideo()"><i class="fas fa-share"></i> Share</div>
-                    <div onclick="deleteVideo()" style="color: #ff4d4d;"><i class="fas fa-trash"></i> Delete</div>
-                </div>
             </div>
             
             <div class="player-section">
@@ -133,7 +119,7 @@
 
             <div class="player-section">
                 <h3>Next.UP</h3>
-                <div id="up-next-list"></div>
+                <div id="up-next-list" class="glass-list"></div>
             </div>
         </div>
     </div>
